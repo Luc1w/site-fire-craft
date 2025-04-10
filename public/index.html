@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Comprar VIP</title>
+</head>
+<body>
+  <h1>Comprar VIP</h1>
+  
+  <input type="text" id="nickname" placeholder="Digite seu nickname">
+  <br><br>
+  
+  <button onclick="comprarVip()">Comprar VIP</button>
+  <button onclick="simularPagamento()">Simular Pagamento</button>
+
+  <script>
+  async function comprarVip() {
+    const nickname = document.getElementById('nickname').value;
+    if (!nickname) {
+      alert('Digite seu nickname!');
+      return;
+    }
+
+    const response = await fetch('/criar-preferencia', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ nickname })
+    });
+
+    const data = await response.json();
+    if (data.init_point) {
+      window.location.href = data.init_point;
+    } else {
+      alert('Erro ao criar preferência de pagamento.');
+    }
+  }
+
+  async function simularPagamento() {
+    const nickname = document.getElementById('nickname').value;
+    if (!nickname) {
+      alert('Digite seu nickname!');
+      return;
+    }
+
+    const response = await fetch('/simular-pagamento', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ nickname })
+    });
+
+    if (response.ok) {
+      alert('Pagamento simulado com sucesso! Seu VIP foi ativado!');
+    } else {
+      alert('Erro ao simular pagamento.');
+    }
+  }
+  </script>
+</body>
+</html>
